@@ -11,31 +11,6 @@ if (PHP_SAPI !== "cli") {
 $cli = new AndreiCroitoru\FrameworkPhp\CLI\CLI();
 
 /**
- * Register CORE Commands
- */
-$commands = \AndreiCroitoru\FrameworkPhp\Helpers\FileHelper::getFiles('./App/Core/CLI/Commands');
-
-foreach ($commands as $command) {
-    $className = \AndreiCroitoru\FrameworkPhp\Helpers\StringHelper::removeExtension($command);
-    $classPath = 'AndreiCroitoru\FrameworkPhp\CLI\Commands\\' . $className;
-    $commandClassObject = new $classPath($cli);
-
-    $commandName = $commandClassObject->name ?? $className;
-
-    $cli->registerController($commandName, $commandClassObject);
-}
-
-foreach ($commands as $command) {
-    $className = \AndreiCroitoru\FrameworkPhp\Helpers\StringHelper::removeExtension($command);
-    $classPath = 'AndreiCroitoru\FrameworkPhp\CLI\Commands\\' . $className;
-    $commandClassObject = new $classPath($cli);
-
-    $commandName = $commandClassObject->name ?? $className;
-
-    $cli->registerController($commandName, $commandClassObject);
-}
-
-/**
  * Register custom commands
  */
 $commands = \AndreiCroitoru\FrameworkPhp\Helpers\FileHelper::getFiles('./App/Commands');
@@ -49,6 +24,5 @@ foreach ($commands as $command) {
 
     $cli->registerController($commandName, $commandClassObject);
 }
-
 
 $cli->runCommand($argv);
