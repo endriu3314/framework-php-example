@@ -1,0 +1,56 @@
+#!/usr/bin/env php
+
+<?php
+
+spl_autoload_register(function ($class) {
+    include __DIR__ . DIRECTORY_SEPARATOR . str_replace('\\', '/', $class) . '.php';
+});
+
+if (PHP_SAPI !== "cli") {
+    exit;
+}
+
+$cli = new AndreiCroitoru\FrameworkPhp\CLI\CLI();
+
+/**
+ * Register CORE Commands
+ */
+$commands = \AndreiCroitoru\FrameworkPhp\Helpers\FileHelper::getFiles('./App/Core/CLI/Commands');
+
+foreach ($commands as $command) {
+    $className = \AndreiCroitoru\FrameworkPhp\Helpers\StringHelper::removeExtension($command);
+    $classPath = 'AndreiCroitoru\FrameworkPhp\CLI\Commands\\' . $className;
+    $commandClassObject = new $classPath($cli);
+
+    $commandName = $commandClassObject->name ?? $className;
+
+    $cli->registerController($commandName, $commandClassObject);
+}
+
+foreach ($commands as $command) {
+    $className = \AndreiCroitoru\FrameworkPhp\Helpers\StringHelper::removeExtension($command);
+    $classPath = 'AndreiCroitoru\FrameworkPhp\CLI\Commands\\' . $className;
+    $commandClassObject = new $classPath($cli);
+
+    $commandName = $commandClassObject->name ?? $className;
+
+    $cli->registerController($commandName, $commandClassObject);
+}
+
+/**
+ * Register custom commands
+ */
+$commands = \AndreiCroitoru\FrameworkPhp\Helpers\FileHelper::getFiles('./App/Commands');
+
+foreach ($commands as $command) {
+    $className = \AndreiCroitoru\FrameworkPhp\Helpers\StringHelper::removeExtension($command);
+    $classPath = 'App\Commands\\' . $className;
+    $commandClassObject = new $classPath($cli);
+
+    $commandName = $commandClassObject->name ?? $className;
+
+    $cli->registerController($commandName, $commandClassObject);
+}
+
+
+$cli->runCommand($argv);
