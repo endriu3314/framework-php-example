@@ -6,25 +6,20 @@ use App\Application;
 
 require '../vendor/autoload.php';
 
-//use AndreiCroitoru\FrameworkPhp\Application;
-//use AndreiCroitoru\FrameworkPhp\Config;
-//use AndreiCroitoru\FrameworkPhp\Router\Router;
+$appConfig = new \App\Config\AppConfig();
 
-//function exception_handler($exception)
-//{
-//    if (ENVIRONMENT == 'development' || ENVIRONMENT == 'dev') {
-//        include \AndreiCroitoru\FrameworkPhp\ExceptionHandler\template.php;
-//        include CORE . '/ExceptionHandler/template.php';
-//    } else {
-//        if (file_exists(TEMPLATES . '500/500.html')) {
-//            include TEMPLATES . '500/500.html';
-//        } else {
-//            include CORE . '/ExceptionHandler/500.php';
-//        }
-//    }
-//}
+function exception_handler($exception)
+{
+    if (ENVIRONMENT == 'development' || ENVIRONMENT == 'dev') {
+        \AndreiCroitoru\FrameworkPhp\ExceptionHandler\ExceptionHandler::includeTemplate($exception);
+    } elseif (file_exists(dirname(__DIR__) . DIRECTORY_SEPARATOR . 'templates' . DIRECTORY_SEPARATOR . '500/500.html')) {
+        include dirname(__DIR__) . DIRECTORY_SEPARATOR . 'templates' . DIRECTORY_SEPARATOR . '500/500.html';
+    } else {
+        \AndreiCroitoru\FrameworkPhp\ExceptionHandler\ExceptionHandler::includeDefault500();
+    }
+}
 
-//set_exception_handler('exception_handler');
+set_exception_handler('exception_handler');
 
 $routes = '../routes.yml';
 $config = new Config($routes);
